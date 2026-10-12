@@ -1,0 +1,149 @@
+:root {
+  color-scheme: light;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #17252b;
+  background: #f3f6f5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+.page-shell {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 48px 0 64px;
+}
+
+.site-header {
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #246653;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 10px;
+  font-size: clamp(1.9rem, 3.5vw, 2.6rem);
+  line-height: 1.15;
+}
+
+.intro,
+.section-heading p,
+.muted-text {
+  color: #5b6b70;
+}
+
+.intro {
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+/* The product area and order controls sit side by side on desktop. */
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.order-column {
+  display: grid;
+  gap: 20px;
+}
+
+.panel {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #dae3e1;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 3px 14px rgba(23, 37, 43, 0.035);
+}
+
+.section-heading {
+  margin-bottom: 20px;
+}
+
+.section-heading h2 {
+  margin-bottom: 6px;
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+.section-heading p {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.empty-state {
+  padding: 30px 20px;
+  border: 1px dashed #c8d5d1;
+  border-radius: 8px;
+  background: #f9fbfa;
+  color: #5b6b70;
+  text-align: center;
+}
+
+.empty-state p,
+.muted-text {
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.products-panel .empty-state {
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e3eae8;
+}
+
+.total-row strong {
+  color: #17533f;
+  font-size: 1.4rem;
+  white-space: nowrap;
+}
+
+.receipt-panel {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 760px) {
+  .page-shell {
+    width: min(100% - 32px, 560px);
+    padding: 32px 0 48px;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .receipt-panel {
+    grid-column: auto;
+  }
+}
