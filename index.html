@@ -21,8 +21,50 @@
           <h2 id="products-heading">Product List</h2>
           <p>School supplies available to order</p>
         </div>
-        <div id="product-list" class="empty-state">
-          <p>Available supplies will appear here.</p>
+        <!-- Product prices are stored in centavos for exact cart calculations in Stage 3. -->
+        <div id="product-list" class="product-grid">
+          <article class="product-card">
+            <div class="product-details">
+              <h3>Ballpen</h3>
+              <p class="product-price">₱12.00</p>
+            </div>
+            <button class="add-button" type="button" data-product-id="ballpen" data-price-cents="1200" disabled>Add to Cart</button>
+          </article>
+          <article class="product-card">
+            <div class="product-details">
+              <h3>Pencil</h3>
+              <p class="product-price">₱10.00</p>
+            </div>
+            <button class="add-button" type="button" data-product-id="pencil" data-price-cents="1000" disabled>Add to Cart</button>
+          </article>
+          <article class="product-card">
+            <div class="product-details">
+              <h3>Notebook</h3>
+              <p class="product-price">₱35.00</p>
+            </div>
+            <button class="add-button" type="button" data-product-id="notebook" data-price-cents="3500" disabled>Add to Cart</button>
+          </article>
+          <article class="product-card">
+            <div class="product-details">
+              <h3>Yellow Pad</h3>
+              <p class="product-price">₱45.00</p>
+            </div>
+            <button class="add-button" type="button" data-product-id="yellow-pad" data-price-cents="4500" disabled>Add to Cart</button>
+          </article>
+          <article class="product-card">
+            <div class="product-details">
+              <h3>Eraser</h3>
+              <p class="product-price">₱8.00</p>
+            </div>
+            <button class="add-button" type="button" data-product-id="eraser" data-price-cents="800" disabled>Add to Cart</button>
+          </article>
+          <article class="product-card">
+            <div class="product-details">
+              <h3>Ruler</h3>
+              <p class="product-price">₱15.00</p>
+            </div>
+            <button class="add-button" type="button" data-product-id="ruler" data-price-cents="1500" disabled>Add to Cart</button>
+          </article>
         </div>
       </section>
 
