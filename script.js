@@ -1,10 +1,16 @@
 const productButtons = document.querySelectorAll(".add-button");
 const cartItems = document.getElementById("cart-items");
 const orderTotal = document.getElementById("order-total");
+const paymentForm = document.getElementById("payment-form");
+const cashInput = document.getElementById("cash-amount");
+const paymentMessage = document.getElementById("payment-message");
+const paymentResult = document.getElementById("payment-result");
+const paymentChange = document.getElementById("payment-change");
 
 // Prices stay in integer centavos so every subtotal and total is exact.
 const products = new Map();
 const cart = new Map();
+let confirmedPayment = null;
 
 productButtons.forEach((button) => {
   const productCard = button.closest(".product-card");
@@ -95,6 +101,21 @@ function renderCart() {
     cartItems.replaceChildren(items);
   }
   orderTotal.textContent = formatPesos(getTotalCents());
+  clearPaymentFeedback();
+}
+
+function clearPaymentFeedback() {
+  confirmedPayment = null;
+  paymentMessage.textContent = "";
+  cashInput.setAttribute("aria-invalid", "false");
+  paymentResult.hidden = true;
+}
+
+function showPaymentError(message) {
+  confirmedPayment = null;
+  paymentMessage.textContent = message;
+  cashInput.setAttribute("aria-invalid", "true");
+  paymentResult.hidden = true;
 }
 
 document.getElementById("product-list").addEventListener("click", (event) => {
@@ -122,4 +143,56 @@ cartItems.addEventListener("click", (event) => {
     cart.set(productId, quantity - 1);
   }
   renderCart();
+});
+
+cashInput.addEventListener("input", clearPaymentFeedback);
+
+paymentForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const rawAmount = cashInput.value.trim();
+
+  if (cashInput.validity.badInput) {
+    showPaymentError("Enter a valid number.");
+    return;
+  }
+  if (rawAmount === "") {
+    showPaymentError("Enter the cash amount.");
+    return;
+  }
+
+  const amountPaid = Number(rawAmount);
+  if (!Number.isFinite(amountPaid)) {
+    showPaymentError("Enter a valid number.");
+    return;
+  }
+  if (amountPaid < 0) {
+    showPaymentError("Cash cannot be negative.");
+    return;
+  }
+
+  // Round to centavos only after checking that the amount has centavo precision.
+  const amountPaidCents = Math.round(amountPaid * 100);
+  if (!Number.isSafeInteger(amountPaidCents) || Math.abs(amountPaid * 100 - amountPaidCents) > 1e-7) {
+    showPaymentError("Enter a cash amount with up to two decimal places.");
+    return;
+  }
+  if (cart.size === 0) {
+    showPaymentError("Add an item to your cart before paying.");
+    return;
+  }
+
+  const totalCents = getTotalCents();
+  if (amountPaidCents < totalCents) {
+    showPaymentError("Cash is less than the total due.");
+    return;
+  }
+
+  confirmedPayment = {
+    amountPaidCents,
+    changeCents: amountPaidCents - totalCents,
+  };
+  paymentMessage.textContent = "";
+  cashInput.setAttribute("aria-invalid", "false");
+  paymentChange.textContent = formatPesos(confirmedPayment.changeCents);
+  paymentResult.hidden = false;
 });

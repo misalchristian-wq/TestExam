@@ -259,6 +259,88 @@ button:focus-visible {
   cursor: not-allowed;
 }
 
+.payment-form {
+  display: grid;
+  gap: 10px;
+}
+
+.payment-form label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.payment-form input {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid #a9bdb6;
+  border-radius: 7px;
+  background: #fff;
+  color: #17252b;
+  font: inherit;
+}
+
+.payment-form input:focus-visible {
+  outline: 3px solid #d19531;
+  outline-offset: 2px;
+}
+
+.payment-form input[aria-invalid="true"] {
+  border-color: #a12d2d;
+}
+
+.payment-message {
+  min-height: 1.25em;
+  margin: 0;
+  color: #a12d2d;
+  font-size: 0.85rem;
+}
+
+.confirm-button {
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 7px;
+  background: #17533f;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.confirm-button:hover {
+  background: #0e3b2b;
+}
+
+.payment-result {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #b9d5c7;
+  border-radius: 8px;
+  background: #f0f8f3;
+}
+
+.payment-result[hidden] {
+  display: none;
+}
+
+.payment-result p {
+  margin-bottom: 12px;
+  color: #17533f;
+  font-weight: 700;
+}
+
+.change-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.change-row strong {
+  color: #17533f;
+  white-space: nowrap;
+}
+
 .total-row {
   display: flex;
   justify-content: space-between;

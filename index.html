@@ -94,7 +94,19 @@
           <div class="section-heading">
             <h2 id="payment-heading">Payment Section</h2>
           </div>
-          <p id="payment-content" class="muted-text">Cash payment will be available here.</p>
+          <form id="payment-form" class="payment-form" novalidate>
+            <label for="cash-amount">Cash Amount Paid (₱)</label>
+            <input id="cash-amount" name="cash-amount" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00" aria-describedby="payment-message">
+            <p id="payment-message" class="payment-message" aria-live="polite"></p>
+            <button class="confirm-button" type="submit">Confirm Payment</button>
+          </form>
+          <div id="payment-result" class="payment-result" role="status" hidden>
+            <p>Payment confirmed.</p>
+            <div class="change-row">
+              <span>Change</span>
+              <strong id="payment-change">₱0.00</strong>
+            </div>
+          </div>
         </section>
       </div>
 
