@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Supplies Ordering System</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
   <div class="page-shell">
@@ -21,7 +22,7 @@
           <h2 id="products-heading">Product List</h2>
           <p>School supplies available to order</p>
         </div>
-        <!-- Product prices are stored in centavos for exact cart calculations in Stage 3. -->
+        <!-- Product prices are stored in centavos for exact cart calculations. -->
         <div id="product-list" class="product-grid">
           <article class="product-card">
             <div class="product-details">
@@ -85,7 +86,7 @@
           </div>
           <div class="total-row">
             <span>Total Amount</span>
-            <strong id="order-total">₱0.00</strong>
+            <strong id="order-total" aria-live="polite">₱0.00</strong>
           </div>
         </section>
 
