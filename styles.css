@@ -312,6 +312,12 @@ button:focus-visible {
   background: #0e3b2b;
 }
 
+.confirm-button:disabled {
+  background: #b8c8c2;
+  color: #263f36;
+  cursor: not-allowed;
+}
+
 .payment-result {
   margin-top: 18px;
   padding: 16px;
@@ -358,6 +364,124 @@ button:focus-visible {
 
 .receipt-panel {
   grid-column: 1 / -1;
+}
+
+.receipt {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px;
+  border: 1px solid #dae3e1;
+  border-radius: 8px;
+  background: #fdfefd;
+}
+
+.receipt-meta {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.receipt-meta-line {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.receipt-meta-line span {
+  color: #5b6b70;
+}
+
+.receipt-meta-line strong {
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.receipt-table-wrap {
+  overflow-x: auto;
+}
+
+.receipt-table {
+  width: 100%;
+  min-width: 470px;
+  border-collapse: collapse;
+}
+
+.receipt-table-caption {
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.receipt-table th,
+.receipt-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e3eae8;
+  text-align: left;
+}
+
+.receipt-table th:not(:first-child),
+.receipt-table .receipt-quantity,
+.receipt-table .receipt-amount {
+  text-align: right;
+}
+
+.receipt-table .receipt-amount {
+  white-space: nowrap;
+}
+
+.receipt-amounts {
+  display: grid;
+  gap: 10px;
+  max-width: 320px;
+  margin: 20px 0 0 auto;
+}
+
+.receipt-amount-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.receipt-amount-row strong {
+  white-space: nowrap;
+}
+
+.receipt-change {
+  padding-top: 10px;
+  border-top: 1px solid #b9d5c7;
+  color: #17533f;
+}
+
+.receipt-confirmation {
+  margin: 24px 0 0;
+  color: #17533f;
+  font-weight: 700;
+  text-align: center;
+}
+
+.new-transaction-button {
+  display: block;
+  min-height: 42px;
+  margin: 20px auto 0;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 7px;
+  background: #17533f;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.new-transaction-button:hover {
+  background: #0e3b2b;
+}
+
+.new-transaction-button[hidden] {
+  display: none;
 }
 
 @media (max-width: 760px) {

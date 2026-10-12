@@ -6,11 +6,15 @@ const cashInput = document.getElementById("cash-amount");
 const paymentMessage = document.getElementById("payment-message");
 const paymentResult = document.getElementById("payment-result");
 const paymentChange = document.getElementById("payment-change");
+const confirmPaymentButton = document.getElementById("confirm-payment");
+const receiptContent = document.getElementById("receipt-content");
+const newTransactionButton = document.getElementById("new-transaction");
 
 // Prices stay in integer centavos so every subtotal and total is exact.
 const products = new Map();
 const cart = new Map();
 let confirmedPayment = null;
+let transactionSequence = 0;
 
 productButtons.forEach((button) => {
   const productCard = button.closest(".product-card");
@@ -118,7 +122,103 @@ function showPaymentError(message) {
   paymentResult.hidden = true;
 }
 
+function makeReceiptSnapshot() {
+  const date = new Date();
+  const items = Array.from(cart, ([productId, quantity]) => {
+    const product = products.get(productId);
+    return {
+      name: product.name,
+      quantity,
+      priceCents: product.priceCents,
+      subtotalCents: product.priceCents * quantity,
+    };
+  });
+
+  // Copy the paid order so the receipt cannot change with later cart state.
+  return {
+    reference: `SS-${date.getTime()}-${++transactionSequence}`,
+    dateTime: date.toLocaleString("en-PH", {
+      year: "numeric", month: "short", day: "numeric",
+      hour: "numeric", minute: "2-digit", second: "2-digit",
+    }),
+    items,
+    totalCents: getTotalCents(),
+    amountPaidCents: confirmedPayment.amountPaidCents,
+    changeCents: confirmedPayment.changeCents,
+  };
+}
+
+function makeReceiptMeta(label, value) {
+  const line = makeElement("p", "receipt-meta-line");
+  line.append(makeElement("span", "", label), makeElement("strong", "", value));
+  return line;
+}
+
+function makeReceiptAmount(label, cents, extraClass = "") {
+  const line = makeElement("div", `receipt-amount-row ${extraClass}`.trim());
+  line.append(makeElement("span", "", label), makeElement("strong", "", formatPesos(cents)));
+  return line;
+}
+
+function renderReceipt(receipt) {
+  const meta = makeElement("div", "receipt-meta");
+  meta.append(
+    makeReceiptMeta("Transaction Reference", receipt.reference),
+    makeReceiptMeta("Date and Time", receipt.dateTime)
+  );
+
+  const table = makeElement("table", "receipt-table");
+  table.append(makeElement("caption", "receipt-table-caption", "Purchased Products"));
+  const tableHead = makeElement("thead", "");
+  const headingRow = makeElement("tr", "");
+  ["Product", "Qty", "Unit Price", "Subtotal"].forEach((label) => {
+    const heading = makeElement("th", "", label);
+    heading.scope = "col";
+    headingRow.append(heading);
+  });
+  tableHead.append(headingRow);
+
+  const tableBody = makeElement("tbody", "");
+  receipt.items.forEach((item) => {
+    const row = makeElement("tr", "");
+    row.append(
+      makeElement("td", "", item.name),
+      makeElement("td", "receipt-quantity", String(item.quantity)),
+      makeElement("td", "receipt-amount", formatPesos(item.priceCents)),
+      makeElement("td", "receipt-amount", formatPesos(item.subtotalCents))
+    );
+    tableBody.append(row);
+  });
+  table.append(tableHead, tableBody);
+  const tableWrap = makeElement("div", "receipt-table-wrap");
+  tableWrap.append(table);
+
+  const amounts = makeElement("div", "receipt-amounts");
+  amounts.append(
+    makeReceiptAmount("Total Amount", receipt.totalCents),
+    makeReceiptAmount("Amount Paid", receipt.amountPaidCents),
+    makeReceiptAmount("Change", receipt.changeCents, "receipt-change")
+  );
+
+  receiptContent.className = "receipt";
+  receiptContent.replaceChildren(
+    meta,
+    tableWrap,
+    amounts,
+    makeElement("p", "receipt-confirmation", "Payment confirmed. Thank you for your purchase.")
+  );
+  newTransactionButton.hidden = false;
+}
+
+function setTransactionLocked(locked) {
+  productButtons.forEach((button) => { button.disabled = locked; });
+  cartItems.querySelectorAll("button[data-action]").forEach((button) => { button.disabled = locked; });
+  cashInput.disabled = locked;
+  confirmPaymentButton.disabled = locked;
+}
+
 document.getElementById("product-list").addEventListener("click", (event) => {
+  if (confirmedPayment) return;
   const button = event.target.closest(".add-button");
   if (!button) return;
 
@@ -128,6 +228,7 @@ document.getElementById("product-list").addEventListener("click", (event) => {
 });
 
 cartItems.addEventListener("click", (event) => {
+  if (confirmedPayment) return;
   const button = event.target.closest("button[data-action]");
   if (!button) return;
 
@@ -145,10 +246,13 @@ cartItems.addEventListener("click", (event) => {
   renderCart();
 });
 
-cashInput.addEventListener("input", clearPaymentFeedback);
+cashInput.addEventListener("input", () => {
+  if (!confirmedPayment) clearPaymentFeedback();
+});
 
 paymentForm.addEventListener("submit", (event) => {
   event.preventDefault();
+  if (confirmedPayment) return;
   const rawAmount = cashInput.value.trim();
 
   if (cashInput.validity.badInput) {
@@ -195,4 +299,17 @@ paymentForm.addEventListener("submit", (event) => {
   cashInput.setAttribute("aria-invalid", "false");
   paymentChange.textContent = formatPesos(confirmedPayment.changeCents);
   paymentResult.hidden = false;
+  renderReceipt(makeReceiptSnapshot());
+  setTransactionLocked(true);
+});
+
+newTransactionButton.addEventListener("click", () => {
+  cart.clear();
+  cashInput.value = "";
+  paymentChange.textContent = formatPesos(0);
+  setTransactionLocked(false);
+  renderCart();
+  receiptContent.className = "empty-state";
+  receiptContent.replaceChildren(makeElement("p", "", "Your receipt will appear here after payment."));
+  newTransactionButton.hidden = true;
 });
